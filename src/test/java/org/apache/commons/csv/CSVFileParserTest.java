@@ -87,10 +87,8 @@ public class CSVFileParserTest {
         return list;
     }
 
-    
-
     @Test
-    public void testCSVUrl() throws Exception {
+    public void testCSVFile() throws Exception {
         String line = readTestData();
         assertNotNull("file must contain config line", line);
         final String[] split = line.split(" ");
@@ -117,8 +115,8 @@ public class CSVFileParserTest {
         assertEquals(testName + " Expected format ", line, format.toString());
 
         // Now parse the file and compare against the expected results
-        final URL resource = ClassLoader.getSystemResource("CSVFileParser/" + split[0]);
-        final CSVParser parser = CSVParser.parse(resource, Charset.forName("UTF-8"), format);
+        // We use a buffered reader internally so no need to create one here.
+        final CSVParser parser = CSVParser.parse(new File(BASE, split[0]), Charset.defaultCharset(), format);
         for (final CSVRecord record : parser) {
             String parsed = Arrays.toString(record.values());
             if (checkComments) {
@@ -132,4 +130,6 @@ public class CSVFileParserTest {
         }
         parser.close();
     }
+
+
 }
